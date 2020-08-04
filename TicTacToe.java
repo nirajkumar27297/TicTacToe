@@ -191,6 +191,12 @@ public class TicTacToe {
 				return;
 				 }
 			}
+		//Center
+		boolean centerValid = moveValid(4);
+		if(centerValid) {
+			this.board[(int)(4 / 3)][4 % 3] = this.computerSymbol;
+			return;	
+		}
 	}
 	
 	public boolean moveValid(int move) {
