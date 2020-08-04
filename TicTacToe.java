@@ -12,9 +12,7 @@ public class TicTacToe {
 			}
 		}
 	}
-	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		//Creating objects for TicTacToe Game
 		TicTacToe gamePlay = new TicTacToe();
 		gamePlay.play();
@@ -56,14 +54,61 @@ public class TicTacToe {
 			}
 			System.out.println("The computer chooses "+this.computerMove);
 		}
+	
+	}
+	
+	boolean equals3(char c1, char c2, char c3) {
+		  return (c1 == c2 && c2 == c3 && c1 != ' ');
+	}
+	
+	public String checkWinner() {
+	  String winner = null;
+	  // horizontal
+	  for (int i = 0; i < 3; i++) {
+	    if (this.equals3(board[i][0], board[i][1], board[i][2])) {
+	      winner = Character.toString(board[i][0]);
+	    }
+	  }
+
+	  // Vertical
+	  for (int i = 0; i < 3; i++) {
+	    if (equals3(board[0][i], board[1][i], board[2][i])) {
+	      winner = Character.toString(board[0][i]);
+	    }
+	  }
+
+	  // Diagonal
+	  if (equals3(board[0][0], board[1][1], board[2][2])) {
+	    winner = Character.toString(board[0][0]);
+	  }
+	  if (equals3(board[2][0], board[1][1], board[0][2])) {
+	    winner = Character.toString(board[2][0]);
+	  }
+	  
+	  
+	  if (this.staleMate() == true && winner == null  ) {
+		  return "tie";
+	  } else {
+	    return winner;
+	  }
+	}
+	//Checking for staleMate
+	public boolean staleMate() {
+		for(int i = 0; i < 3; i++) {
+			for(int j = 0; j < 3; j++) {
+				if (this.board[i][j] != ' ') {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 	public void displayBoard() {
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 3; j++) {
 				System.out.print("|");
-				System.out.print(this.board[i][j]+" ");
-				
+				System.out.print(this.board[i][j]+" ");	
 			}
 			System.out.println();
 			System.out.println("---------");
