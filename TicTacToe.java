@@ -179,7 +179,18 @@ public class TicTacToe {
 	}
 	
 	public void computerMove() {
-		this.findBestMove();
+		//this.findBestMove();
+		//Corner Cases
+		for(int i=0;i<9;i+=2) {
+			boolean validSides=moveValid(i);
+			if(i == 4) {
+				continue;
+			}
+			if (validSides) {
+				this.board[(int)(i / 3)][i % 3] = this.computerSymbol;
+				return;
+				 }
+			}
 	}
 	
 	public boolean moveValid(int move) {
