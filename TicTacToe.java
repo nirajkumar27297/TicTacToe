@@ -197,6 +197,14 @@ public class TicTacToe {
 			this.board[(int)(4 / 3)][4 % 3] = this.computerSymbol;
 			return;	
 		}
+		
+		for(int i=1;i<9;i+=2) {
+			boolean validSides=moveValid(i);
+				if (validSides) {
+					this.board[(int)(i / 3)][i % 3] = this.computerSymbol;
+					return;
+			}
+			}
 	}
 	
 	public boolean moveValid(int move) {
