@@ -33,7 +33,6 @@ public class TicTacToe {
 		// Generating a random number in range[0,1] if 0 then computer chance and 1 then player chance
 		int checkOption = rand.nextInt(2);
 		this.displayBoard();
-		
 		if(checkOption == 1) {
 			System.out.println("Player Chance to Play");
 			System.out.println("Choose Either X or O");
