@@ -175,7 +175,7 @@ public class TicTacToe {
 				}
 			}
 			return bestScore;
-			}
+		}
 	}
 	
 	public void computerMove() {
