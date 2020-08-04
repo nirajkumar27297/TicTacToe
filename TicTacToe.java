@@ -70,10 +70,8 @@ public class TicTacToe {
 	public void startPlaying(int turn) {
 		Scanner sc = new Scanner(System.in);
 		int move;
-		char symbol;
 		while(true) {
 			if(turn == 1) {
-				symbol = this.userSymbol;
 				System.out.println("Enter the move in range[1-9]");
 				move = sc.nextInt();
 				move -= 1;
@@ -83,10 +81,9 @@ public class TicTacToe {
 					System.out.println("Invalid Move Try Once More");
 					continue;			
 				}
-				this.board[(int)(move / 3)][move % 3] = symbol;
+				this.board[(int)(move / 3)][move % 3] = this.userSymbol;
 			}
 			else {
-				symbol = this.computerSymbol;
 				computerMove();
 			}
 			
