@@ -184,18 +184,23 @@ public class TicTacToe {
 				return;
 			}
 			}
-		
-		//Random Sides
-		while(true) {
-			Random rand = new Random();
-			move = rand.nextInt(9);
-			if(this.moveValid(move)) {
-				this.board[(int)(move / 3)][move % 3] = this.computerSymbol;
-				this.computerPosition.add(move);
-				return;
-			}	
+		//Center
+		boolean centerValid = moveValid(4);
+		if(centerValid) {
+			this.board[(int)(4 / 3)][4 % 3] = this.computerSymbol;
+			this.computerPosition.add(4);
+			return;	
 		}
-		}	
+		//Sides Check
+		for(int i=1;i<9;i+=2) {
+			boolean validSides=moveValid(i);
+			if (validSides) {
+				this.board[(int)(i / 3)][i % 3] = this.computerSymbol;
+				this.computerPosition.add(i);
+				return;
+			}
+		}
+	}	
 	
 	public boolean moveValid(int move) {
 		if(this.board[(int)(move / 3)][move % 3] == ' ') {
