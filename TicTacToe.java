@@ -171,7 +171,20 @@ public class TicTacToe {
 			this.board[(int)(move / 3)][move % 3] = this.computerSymbol;
 			this.computerPosition.add(move);
 			return ;
-		}	
+		}
+		//Corners
+		for(int i=0;i<9;i+=2) {
+			boolean validSides=moveValid(i);
+			if(i == 4) {
+				continue;
+			}
+			if (validSides) {
+				this.board[(int)(i / 3)][i % 3] = this.computerSymbol;
+				this.computerPosition.add(i);
+				return;
+			}
+			}
+		
 		//Random Sides
 		while(true) {
 			Random rand = new Random();
