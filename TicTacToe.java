@@ -139,7 +139,7 @@ public class TicTacToe {
 				this.computerPosition.add(move);
 				return;
 			}	
-		}
+			}
 		}	
 	
 	public boolean moveValid(int move) {
