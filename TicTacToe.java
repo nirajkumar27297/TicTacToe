@@ -4,8 +4,8 @@ public class TicTacToe {
 	private char[][] board;
 	private char userSymbol;
 	private char computerSymbol;
-	private Map<String,Integer> scoreMap = new HashMap<String,Integer>();
-	
+	private ArrayList<Integer> playerPosition;
+	private ArrayList<Integer> computerPosition;
 	TicTacToe() {
 		board = new char[3][3];
 		for(int i = 0; i < 3; i++) {
@@ -13,10 +13,9 @@ public class TicTacToe {
 				this.board[i][j] = ' ';
 			}
 		}
-		this.scoreMap.put("X", 10);
-		this.scoreMap.put("O",-10);
-		this.scoreMap.put("tie",0);		
-	}
+		playerPosition = new ArrayList<Integer>();
+		computerPosition = new ArrayList<Integer>();
+		}
 	public static void main(String[] args) {
 		
 		//Creating objects for TicTacToe Game
@@ -33,22 +32,31 @@ public class TicTacToe {
 		// Generating a random number in range[0,1] if 0 then computer chance and 1 then player chance
 		int checkOption = rand.nextInt(2);
 		this.displayBoard();
+		
 		if(checkOption == 1) {
-			System.out.println("Player Chance to Play");
-			System.out.println("Choose Either X or O");
-			//Taking input from the user
-			input = sc.next().charAt(0);
-			this.userSymbol = input;
-			System.out.println("You chose "+this.userSymbol);
-			if(input == 'X') {
-				this.computerSymbol = 'O';
-			}
-			else {
-				this.computerSymbol = 'X';
-			}
-			
-			
+			while(true) {
+				System.out.println("Player Chance to Play");
+				System.out.println("Choose Either X or O");
+				//Taking input from the user
+				input = sc.next().charAt(0);
+				if(input != 'X') {
+					System.out.println("Enter Right Value");
+					continue;
+				}
+				this.userSymbol = input;
+				System.out.println("You chose "+this.userSymbol);
+				
+				if(input == 'X') {
+					
+					this.computerSymbol = 'O';
+				}
+				else {
+					this.computerSymbol = 'X';
+				}
+				break;
+			}	
 		}
+		
 		else {
 			System.out.println("Computer Chance to Play");
 			//Generating a random number in range[0,1] if 0 then input is "O" else "X"
@@ -64,9 +72,10 @@ public class TicTacToe {
 			System.out.println("The computer chooses "+this.computerSymbol);
 			
 		}
+		//start playing
 		this.startPlaying(checkOption);
 	}
-	
+	//Game started with turn
 	public void startPlaying(int turn) {
 		Scanner sc = new Scanner(System.in);
 		int move;
@@ -81,16 +90,18 @@ public class TicTacToe {
 					System.out.println("Invalid Move Try Once More");
 					continue;			
 				}
+				this.playerPosition.add(move);
 				this.board[(int)(move / 3)][move % 3] = this.userSymbol;
 			}
 			else {
+				System.out.println("Computer Turn");
 				computerMove();
 			}
 			
 			this.displayBoard();
 			
 			String resultWinner=this.checkWinner();
-			
+			boolean dre = this.draw();
 			if(resultWinner != null ) {
 				System.out.println(resultWinner);
 				if(resultWinner.charAt(0) == this.computerSymbol) {
@@ -117,70 +128,51 @@ public class TicTacToe {
 			}	
 	}
 	}
-	
-	public void findBestMove() {
-		int bestScore = Integer.MIN_VALUE;
-		int score;
-		int bestXPosition = 0;
-		int bestYPosition = 0;
+	public int checkComputerWinning(ArrayList<Integer> position) {
+		//Storing all the wining Positions
+		int[][] winningPosition = { { 0, 1, 2 }, { 3, 4, 5 }, { 6, 7, 8 }, { 0, 3, 6 }, { 1, 4, 7 }, { 2, 5, 8 }, { 0, 4, 8 },
+                { 2, 4, 6 } };
+		int k = 0;
+		ArrayList<Integer> unMatchedPosition = new ArrayList<Integer>();
+		while ( k < 8) {
+			int countMatch=0;
+			unMatchedPosition.clear();
+			
+			for(int i = 0; i < winningPosition[k].length; i++) {
 				
-		for(int i = 0; i < 3; i++) {
-			for(int j = 0; j < 3;j++) {
-				if(this.board[i][j] == ' ') {
-					this.board[i][j] = this.computerSymbol;
-					score = this.minimax(0,false);
-					this.board[i][j] = ' ';
-					if( score > bestScore ) {
-						bestXPosition = i;
-						bestYPosition= j;
-						bestScore = score;		
-					}	
+				// if position array list contains winning positing incrementing by 1
+				if (position.contains(winningPosition[k][i])) {
+					countMatch++;
+				}
+				else {
+					unMatchedPosition.add(winningPosition[k][i]);
 				}
 			}
-		}
-		this.board[bestXPosition][bestYPosition] = this.computerSymbol;
-	}
-	
-	public int minimax(int depth, boolean isMaximising) {
-		String resultWinner=this.checkWinner();
-		if (resultWinner != null )  {
-			return this.scoreMap.get(resultWinner);
-	}
-		int score;
-		
-		if(isMaximising) {
-			int bestScore = Integer.MIN_VALUE;
-			for(int i = 0; i < 3; i++) {
-				for(int j = 0; j < 3;j++) {
-					if(this.board[i][j] == ' ') {
-						this.board[i][j] = this.computerSymbol;
-						score = this.minimax(depth + 1,false);
-						this.board[i][j] = ' ';
-						bestScore = Math.max(score,bestScore);	
-					}
-				}
+			if( countMatch == 2 && unMatchedPosition.size() == 1) {
+				return unMatchedPosition.get(0);
 			}
-			return bestScore;	
+			k++;
 		}
-		else {
-			int bestScore = Integer.MAX_VALUE;
-			for(int i = 0; i < 3; i++) {
-				for(int j = 0; j < 3;j++) {
-					if(this.board[i][j] == ' ') {
-						this.board[i][j] = this.userSymbol;
-						score = this.minimax(depth + 1,true);
-						this.board[i][j] = ' ';
-						bestScore = Math.min(score,bestScore);
-					}
-				}
-			}
-			return bestScore;
-		}
+		return -1;
 	}
 	
 	public void computerMove() {
-		//this.findBestMove();
-		//Corner Cases
+		
+		//Winning Position
+		int move = this.checkComputerWinning(this.computerPosition);
+		if( move != -1 && this.moveValid(move)) {
+			this.board[(int)(move / 3)][move % 3] = this.computerSymbol;
+			this.computerPosition.add(move);
+			return;
+		}
+		//Blocking Position
+		move = this.checkComputerWinning(this.playerPosition);
+		if( move != -1 && this.moveValid(move)) {
+			this.board[(int)(move / 3)][move % 3] = this.computerSymbol;
+			this.computerPosition.add(move);
+			return ;
+		}
+		//Corners
 		for(int i=0;i<9;i+=2) {
 			boolean validSides=moveValid(i);
 			if(i == 4) {
@@ -188,24 +180,27 @@ public class TicTacToe {
 			}
 			if (validSides) {
 				this.board[(int)(i / 3)][i % 3] = this.computerSymbol;
+				this.computerPosition.add(i);
 				return;
-				 }
+			}
 			}
 		//Center
 		boolean centerValid = moveValid(4);
 		if(centerValid) {
 			this.board[(int)(4 / 3)][4 % 3] = this.computerSymbol;
+			this.computerPosition.add(4);
 			return;	
 		}
-		
+		//Sides Check
 		for(int i=1;i<9;i+=2) {
 			boolean validSides=moveValid(i);
-				if (validSides) {
-					this.board[(int)(i / 3)][i % 3] = this.computerSymbol;
-					return;
+			if (validSides) {
+				this.board[(int)(i / 3)][i % 3] = this.computerSymbol;
+				this.computerPosition.add(i);
+				return;
 			}
-			}
-	}
+		}
+	}	
 	
 	public boolean moveValid(int move) {
 		if(this.board[(int)(move / 3)][move % 3] == ' ') {
@@ -255,18 +250,18 @@ public class TicTacToe {
 	  }
 	  
 	  
-	  if (this.staleMate() == true && winner == null  ) {
+	  if (this.draw() == true && winner == null  ) {
 		  return "tie";
 	  } else {
 	    return winner;
 	  }
 	}
 	
-	//Checking for staleMate
-	public boolean staleMate() {
+	//Checking for draw
+	public boolean draw() {
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 3; j++) {
-				if (this.board[i][j] != ' ') {
+				if (this.board[i][j] == ' ') {
 					return false;
 				}
 			}
