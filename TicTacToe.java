@@ -165,6 +165,13 @@ public class TicTacToe {
 			this.computerPosition.add(move);
 			return;
 		}
+		//Blocking Position
+		move = this.checkComputerWinning(this.playerPosition);
+		if( move != -1 && this.moveValid(move)) {
+			this.board[(int)(move / 3)][move % 3] = this.computerSymbol;
+			this.computerPosition.add(move);
+			return ;
+		}	
 		//Random Sides
 		while(true) {
 			Random rand = new Random();
