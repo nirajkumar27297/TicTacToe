@@ -128,18 +128,53 @@ public class TicTacToe {
 			}	
 	}
 	}
+	public int checkComputerWinning(ArrayList<Integer> position) {
+		//Storing all the wining Positions
+		int[][] winningPosition = { { 0, 1, 2 }, { 3, 4, 5 }, { 6, 7, 8 }, { 0, 3, 6 }, { 1, 4, 7 }, { 2, 5, 8 }, { 0, 4, 8 },
+                { 2, 4, 6 } };
+		int k = 0;
+		ArrayList<Integer> unMatchedPosition = new ArrayList<Integer>();
+		while ( k < 8) {
+			int countMatch=0;
+			unMatchedPosition.clear();
+			
+			for(int i = 0; i < winningPosition[k].length; i++) {
+				
+				// if position array list contains winning positing incrementing by 1
+				if (position.contains(winningPosition[k][i])) {
+					countMatch++;
+				}
+				else {
+					unMatchedPosition.add(winningPosition[k][i]);
+				}
+			}
+			if( countMatch == 2 && unMatchedPosition.size() == 1) {
+				return unMatchedPosition.get(0);
+			}
+			k++;
+		}
+		return -1;
+	}
 	
-	public void computerMove() {																			
+	public void computerMove() {
+		
+		//Winning Position
+		int move = this.checkComputerWinning(this.computerPosition);
+		if( move != -1 && this.moveValid(move)) {
+			this.board[(int)(move / 3)][move % 3] = this.computerSymbol;
+			this.computerPosition.add(move);
+			return;
+		}
 		//Random Sides
 		while(true) {
 			Random rand = new Random();
-			int move = rand.nextInt(9);
+			move = rand.nextInt(9);
 			if(this.moveValid(move)) {
 				this.board[(int)(move / 3)][move % 3] = this.computerSymbol;
 				this.computerPosition.add(move);
 				return;
 			}	
-			}
+		}
 		}	
 	
 	public boolean moveValid(int move) {
